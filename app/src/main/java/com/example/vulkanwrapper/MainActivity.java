@@ -10,6 +10,7 @@ public class MainActivity extends Activity {
     static { System.loadLibrary("vulkan_wrapper"); }
     private static native String runVulkanTest();
     private static native String testBC7();
+    private static native String testBC7GPU();
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,10 @@ public class MainActivity extends Activity {
         bc7Button.setText("Testar BC7 CPU");
         bc7Button.setOnClickListener(v -> output.setText(testBC7()));
         layout.addView(bc7Button);
+        Button gpuButton = new Button(this);
+        gpuButton.setText("Testar BC7 GPU");
+        gpuButton.setOnClickListener(v -> output.setText(testBC7GPU()));
+        layout.addView(gpuButton);
         layout.addView(output);
         setContentView(layout);
     }
