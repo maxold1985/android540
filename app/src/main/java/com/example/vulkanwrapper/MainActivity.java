@@ -9,6 +9,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
     static { System.loadLibrary("vulkan_wrapper"); }
     private static native String runVulkanTest();
+    private static native String testBC7();
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +22,10 @@ public class MainActivity extends Activity {
         button.setText("Testar Vulkan");
         button.setOnClickListener(v -> output.setText(runVulkanTest()));
         layout.addView(button);
+        Button bc7Button = new Button(this);
+        bc7Button.setText("Testar BC7 CPU");
+        bc7Button.setOnClickListener(v -> output.setText(testBC7()));
+        layout.addView(bc7Button);
         layout.addView(output);
         setContentView(layout);
     }
