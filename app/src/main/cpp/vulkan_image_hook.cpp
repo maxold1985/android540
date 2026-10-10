@@ -3,6 +3,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <cstdint>
+#include <cstring>
 
 // Explicit opt-in device dispatch. This is NOT a loader layer.
 // The caller must pass functions obtained from the real device dispatch table.
@@ -25,7 +26,10 @@ static std::unordered_map<uint64_t, ImageInfo> images;
 static uint64_t key(VkImage image) {
     // VkImage is a non-dispatchable handle; Vulkan headers may define it as
     // a pointer or uint64_t depending on architecture.
-    return static_cast<uint64_t>(reinterpret_cast<uintptr_t>(image));
+    uint64_t value = 0;
+    static_assert(sizeof(image) <= sizeof(value), "Unexpected VkImage size");
+    std::memcpy(&value, &image, sizeof(image));
+    return value;
 }
 
 bool isBC7(VkFormat f) {
