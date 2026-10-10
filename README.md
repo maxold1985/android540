@@ -17,3 +17,9 @@ Não há gradle wrapper no projeto; Android Studio pode abrir/sincronizar usando
 O botão **Testar BC7 CPU** executa um teste de decodificação de um bloco BC7 de 16 bytes para 4x4 RGBA8 (64 bytes). `bc7_decoder.cpp` também disponibiliza `bc7::decodeRGBA8` para imagens BC7 com dimensões não múltiplas de quatro, com validação do tamanho de entrada e do row pitch.
 
 O decodificador utiliza [bcdec](https://github.com/iOrange/bcdec) v0.985 (licença incluída no header). **Não há suporte transparente a BC7 no Vulkan/DXVK:** ainda é necessário integrar upload, alocação e views com imagens RGBA8 e interceptar funções Vulkan com dispatch correto. A GPU não passa a anunciar BC7 por causa deste código.
+
+## Teste de upload BC7 para GPU Vulkan
+
+O botão **Testar BC7 GPU** cria um bloco BC7 de teste, decodifica para RGBA8 com bcdec, cria uma imagem `VK_FORMAT_R8G8B8A8_UNORM`, usa staging buffer com memória host-coherent, executa `vkCmdCopyBufferToImage` e transiciona a imagem para `VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL`.
+
+O teste é limitado a uma imagem 4x4 e não faz leitura de volta da GPU ou amostragem por shader. Não intercepta automaticamente `vkCreateImage` do DXVK, não virtualiza `VkImage` nem cobre mipmaps, imagens em arrays, cópias, atualizações parciais ou formatos sRGB. Não altera os recursos anunciados pelo driver Samsung.
